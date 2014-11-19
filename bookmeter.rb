@@ -14,10 +14,10 @@ class BookMeter
   def initialize
     @mail = 'miwarin@gmail.com'
     @pass = 'PASSWORD'
-#    @matome_uri = 'http://book.akahoshitakuya.com/matome' # 先月
-    @matome_uri = 'http://book.akahoshitakuya.com/matome?sort=0&size=3&tab_id=5#sort_form_blog'
-#    @matome_uri = 'http://book.akahoshitakuya.com/matome_lw' # 先週
-#    @matome_uri = 'http://book.akahoshitakuya.com/matome_ly' # 去年
+#    @matome_uri = 'http://bookmeter.com/matome' # 先月
+    @matome_uri = 'http://bookmeter.com/matome?sort=0&size=3&tab_id=5#sort_form_blog'
+#    @matome_uri = 'http://bookmeter.com/matome_lw' # 先週
+#    @matome_uri = 'http://bookmeter.com/matome_ly' # 去年
   end
 
   #
@@ -25,7 +25,7 @@ class BookMeter
   #
   def get
     agent = Mechanize.new
-    agent.get('http://book.akahoshitakuya.com/login')
+    agent.get('http://bookmeter.com/login')
     agent.page.form_with(:action => '/login'){|f|
       f.field_with( :name => 'mail' ).value = @mail
       f.field_with( :name => 'password' ).value = @pass
@@ -43,6 +43,9 @@ class BookMeter
     
     text.sub!( '</textarea>', '')
     text.gsub!( "'", "\\\\'" )
+    text.gsub!( "'", '@' )
+    text.gsub!( '"', "'" )
+    text.gsub!( "@", '"' )
     text = "{{'" + text + "'}}"
     return text
   end
@@ -86,6 +89,7 @@ end
 def main
   bm = BookMeter.new
   text = bm.get
+  puts text
   td = Diary.new
   td.set(text)
 end
