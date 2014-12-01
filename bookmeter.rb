@@ -12,8 +12,8 @@ require 'pp'
 class BookMeter
 
   def initialize
-    @mail = 'miwarin@gmail.com'
-    @pass = 'PASSWORD'
+    @mail = 'BOOKMETER MAIL'
+    @pass = 'BOOKMETER PASSWORD'
 #    @matome_uri = 'http://bookmeter.com/matome' # 先月
     @matome_uri = 'http://bookmeter.com/matome?sort=0&size=3&tab_id=5#sort_form_blog'
 #    @matome_uri = 'http://bookmeter.com/matome_lw' # 先週
@@ -42,10 +42,11 @@ class BookMeter
     # " 秀丸の強調表示がホゲるのでわざとダブルクオーテーションを追加しとく
     
     text.sub!( '</textarea>', '')
-    text.gsub!( "'", "\\\\'" )
-    text.gsub!( "'", '@' )
-    text.gsub!( '"', "'" )
-    text.gsub!( "@", '"' )
+    text.gsub!("\n", "<br />")
+#    text.gsub!( "'", "\\\\'" )
+#    text.gsub!( "'", '@' )
+#    text.gsub!( '"', "'" )
+#    text.gsub!( "@", '"' )
     text = "{{'" + text + "'}}"
     return text
   end
@@ -55,7 +56,6 @@ end
 class Diary
   def initialize
     @uri = "http://www.area51.gr.jp/~rin/diary/update.rb"
-#    @uri = "http://localhost/~rin/diary/update.rb"
     @user = "TDIARY USER"
     @pass = "TDIARY PASSWORD"
     @referer = "http://www.area51.gr.jp/~rin/diary/update.rb"
