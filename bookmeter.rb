@@ -2,22 +2,25 @@
 
 # -*- encoding: utf-8 -*-
 
-
 require 'rubygems'
 require 'mechanize'
 require 'logger'
 require 'nkf'
+require 'cgi'
 require 'pp'
+
+BOOKMETER_USERNAME = 'USERNAME'
+BOOKMETER_PASSWORD = 'PASSWORD'
+BOOKMETER_USERID = ID
+TDIARY_USERNAME = 'USERNAME'
+TDIARY_PASSWORD = 'PASSWORD'
 
 class BookMeter
 
   def initialize
-    @mail = 'BOOKMETER MAIL'
-    @pass = 'BOOKMETER PASSWORD'
-#    @matome_uri = 'http://bookmeter.com/matome' # 先月
-    @matome_uri = 'http://bookmeter.com/matome?sort=0&size=3&tab_id=5#sort_form_blog'
-#    @matome_uri = 'http://bookmeter.com/matome_lw' # 先週
-#    @matome_uri = 'http://bookmeter.com/matome_ly' # 去年
+    @mail = BOOKMETER_USERNAME
+    @pass = BOOKMETER_PASSWORD
+    @matome_uri = %Q(https://bookmeter.com/users/#{BOOKMETER_USERID}/summary/posting/blog?order=desc&insert_break=true&image_size=small#blog_html)
   end
 
   #
@@ -25,40 +28,35 @@ class BookMeter
   #
   def get
     agent = Mechanize.new
-    agent.get('http://bookmeter.com/login')
+    agent.get('https://bookmeter.com/login')
     agent.page.form_with(:action => '/login'){|f|
-      f.field_with( :name => 'mail' ).value = @mail
-      f.field_with( :name => 'password' ).value = @pass
+      f[ 'session[email_address]' ] = @mail
+      f[ 'session[password]' ] = @pass
       f.checkboxes[ 0 ].check
       f.click_button
     }
     
-    
+    # まとめへ遷移
     agent.get(@matome_uri)
-
-    body = Nokogiri( agent.page.body )
-    text = body.search( 'textarea' )[ 2 ].to_s
-    text.sub!( %q[<textarea onclick="this.select();_gaq.push(['_trackEvent', 'matome', 'textarea_blog_tag']);">], '')
-    # " 秀丸の強調表示がホゲるのでわざとダブルクオーテーションを追加しとく
     
-    text.sub!( '</textarea>', '')
-    text.gsub!("\n", "<br />")
-#    text.gsub!( "'", "\\\\'" )
-#    text.gsub!( "'", '@' )
-#    text.gsub!( '"', "'" )
-#    text.gsub!( "@", '"' )
+    # 「改行を入れる」をチェック
+    agent.page.forms[1].checkboxes[ 0 ].check
+    
+    text = Nokogiri( agent.page.body ).search( 'textarea' )[ 0 ].to_s
+    text.sub!( '<textarea onclick="this.select();" readonly>', '' )
+    text.sub!( '</textarea>', '' )
+    text = CGI.unescapeHTML( text )
     text = "{{'" + text + "'}}"
     return text
   end
-
 end
 
 class Diary
   def initialize
-    @uri = "http://www.area51.gr.jp/~rin/diary/update.rb"
-    @user = "TDIARY USER"
-    @pass = "TDIARY PASSWORD"
-    @referer = "http://www.area51.gr.jp/~rin/diary/update.rb"
+    @uri = "https://www.area51.gr.jp/~rin/diary/update.rb"
+    @referer = "https://www.area51.gr.jp/~rin/diary/update.rb"
+    @user = TDIARY_USERNAME
+    @pass = TDIARY_PASSWORD
   end
   
   def set(text)
@@ -82,9 +80,7 @@ class Diary
       )
     }
   end
-  
 end
-
 
 def main
   bm = BookMeter.new
