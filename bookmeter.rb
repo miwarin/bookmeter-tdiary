@@ -20,7 +20,7 @@ class BookMeter
   def initialize
     @mail = BOOKMETER_USERNAME
     @pass = BOOKMETER_PASSWORD
-    @matome_uri = %Q(https://bookmeter.com/users/#{BOOKMETER_USERID}/summary/posting/blog?order=desc&insert_break=true&image_size=small#blog_html)
+    @matome_uri = %Q(https://bookmeter.com/users/#{BOOKMETER_USERID}/summary/monthly/posting/blog?order=desc&insert_break=true&image_size=small#blog_html)
   end
 
   #
