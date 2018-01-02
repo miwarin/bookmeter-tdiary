@@ -38,14 +38,7 @@ class BookMeter
     
     # まとめへ遷移
     agent.get(@matome_uri)
-    
-    # 「改行を入れる」をチェック
-    agent.page.forms[1].checkboxes[ 0 ].check
-    
-    text = Nokogiri( agent.page.body ).search( 'textarea' )[ 0 ].to_s
-    text.sub!( '<textarea onclick="this.select();" readonly>', '' )
-    text.sub!( '</textarea>', '' )
-    text = CGI.unescapeHTML( text )
+    text = Nokogiri( agent.page.body ).search( "//div[@class='inner__htmlsample']" ).to_s
     text = "{{'" + text + "'}}"
     return text
   end
