@@ -1,7 +1,3 @@
-#!/usr/pkg/bin/ruby -Ku
-
-# -*- encoding: utf-8 -*-
-
 require 'mechanize'
 require 'logger'
 require 'cgi'
@@ -74,12 +70,3 @@ class Diary
   end
 end
 
-def main
-  bm = BookMeter.new
-  text = bm.get
-  puts text
-  td = Diary.new
-  td.set(text)
-end
-
-main
