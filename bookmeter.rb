@@ -14,6 +14,7 @@ BOOKMETER_PASSWORD = 'PASSWORD'
 BOOKMETER_USERID = ID
 TDIARY_USERNAME = 'USERNAME'
 TDIARY_PASSWORD = 'PASSWORD'
+TDIARY_URI = "https://www.area51.gr.jp/~rin/diary/update.rb"
 
 class BookMeter
 
@@ -46,8 +47,8 @@ end
 
 class Diary
   def initialize
-    @uri = "https://www.area51.gr.jp/~rin/diary/update.rb"
-    @referer = "https://www.area51.gr.jp/~rin/diary/update.rb"
+    @uri = TDIARY_URI
+    @referer = TDIARY_URI
     @user = TDIARY_USERNAME
     @pass = TDIARY_PASSWORD
   end
