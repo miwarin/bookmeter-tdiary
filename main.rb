@@ -1,10 +1,10 @@
 require './bookmeter.rb'
 
 def main
-  bm = BookMeter.new
+  bm = BookMeter::BookMeter.new
   text = bm.get
   puts text
-  td = Diary.new
+  td = BookMeter::Diary.new
   td.set(text)
 end
 
