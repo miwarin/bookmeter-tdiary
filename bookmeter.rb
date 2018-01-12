@@ -2,10 +2,8 @@
 
 # -*- encoding: utf-8 -*-
 
-require 'rubygems'
 require 'mechanize'
 require 'logger'
-require 'nkf'
 require 'cgi'
 require 'pp'
 
