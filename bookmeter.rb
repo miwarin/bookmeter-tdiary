@@ -1,7 +1,5 @@
 require 'mechanize'
 require 'logger'
-require 'cgi'
-require 'pp'
 
 module BookMeter
   class BookMeter
@@ -27,7 +25,7 @@ module BookMeter
       
       # まとめへ遷移
       agent.get(@matome_uri)
-      text = Nokogiri( agent.page.body ).search( "//div[@class='inner__htmlsample']" ).to_s
+      text = Nokogiri( agent.page.body ).search( "//div[@class='inner__htmlsample']" ).to_s.sub('<div class="inner__htmlsample">', '').sub('</div>', '').gsub("'", "’")
       text = "{{'" + text + "'}}"
       return text
     end
