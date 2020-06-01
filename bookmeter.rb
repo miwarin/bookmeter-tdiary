@@ -7,7 +7,7 @@ module BookMeter
     def initialize(username, pass, id)
       @mail = username
       @pass = pass
-      @matome_uri = %Q(https://bookmeter.com/users/#{id}/summary/monthly/posting/blog?order=desc&insert_break=true&image_size=small#blog_html)
+      @matome_uri = %Q(https://bookmeter.com/users/#{id}/summary/monthly/posting/blog#posting_type_tabs)
     end
 
     #
@@ -43,7 +43,7 @@ module BookMeter
       agent = Mechanize.new
       agent.log = Logger.new($stdout)
       agent.log.level = Logger::INFO
-      agent.auth(@user, @pass)
+      agent.add_auth(@uri, @user, @pass)
       agent.get(@uri, nil, @referer)
       
       text = "!読書メーター\n\n" + text
